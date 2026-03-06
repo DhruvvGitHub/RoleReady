@@ -1,8 +1,14 @@
-require(".dotenv").config()
+require("dotenv").config();
 
-const app = require("./src/app")
-const connectToDB = require("./config/db")
+const connectToDB = require("./config/db");
+const app = require("./src/app");
 
-app.listen(3000, () => {
-    console.log("Server is running")
-})
+// connect to MongoDB (if you have a function for it)
+if (typeof connectToDB === "function") {
+    connectToDB();
+}
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
