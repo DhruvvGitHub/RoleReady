@@ -33,11 +33,11 @@ const Login = () => {
                 <div className='flex flex-col gap-2 rem'>
                     <div className='input-group flex flex-col gap-1 rem'>
                     <label htmlFor="email" className='text-lg'>Email</label>
-                    <input onChange={(e) => {setEmail(e.target.value)}} type="text" id='email' name='email' placeholder='Enter email' className='p-2 bg-zinc-300 text-black rounded-lg outline-none' />
+                    <input onChange={(e) => {setEmail(e.target.value)}} type="text" id='email' name='email' placeholder='Enter email' autoComplete='off' className='p-2 bg-zinc-300 text-black rounded-lg outline-none' />
                 </div>
                 <div className='input-group flex flex-col gap-1 rem'>
                     <label htmlFor="password" className='text-lg'>Password</label>
-                    <input onChange={(e) => {setPassword(e.target.value)}}  type="text" id='password' name='password' placeholder='Enter password' className='p-2 bg-zinc-300 text-black rounded-lg outline-none' />
+                    <input onChange={(e) => {setPassword(e.target.value)}}  type="text" id='password' name='password' placeholder='Enter password' autoComplete='off' className='p-2 bg-zinc-300 text-black rounded-lg outline-none' />
                 </div>
                 </div>
                 <button className='px-4 py-2 bg-green-600 rounded-xl cursor-pointer mt-4 transform transition-transform duration-200 active:scale-110'>Login</button>
