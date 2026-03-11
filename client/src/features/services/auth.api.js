@@ -35,10 +35,12 @@ export async function login({ email, password}) {
 export async function logout() {
     try {
         const response = await api.get("/auth/logout")
-
-    return response.data
+        return response.data
     } catch (error) {
-        console.log(error);
+        // most common case is 401 when no cookie/token is present;
+        // just return null so callers know there's no logged-in user.
+        console.warn("getMe error", error.response?.status || error.message)
+        return null
     }
 }
 
