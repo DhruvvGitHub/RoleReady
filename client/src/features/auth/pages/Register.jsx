@@ -26,7 +26,7 @@ const Register = () => {
 
   return (
         <main>
-        <div className='form-container min-h-screen w-full flex items-center justify-center'>
+        <div className='form-container min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800'>
             <div className='min-w-md flex flex-col gap-3 rem'>
                 <h1 className='text-3xl font-bold'>Register </h1>
             <form onSubmit={handleSubmit}>
