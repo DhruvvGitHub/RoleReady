@@ -1,6 +1,6 @@
 const { GoogleGenAI } = require("@google/genai");
 const { z } = require("zod");
-const {zodToJsonSchema} = require("zod-to-json-schema");
+const { zodToJsonSchema } = require("zod-to-json-schema");
 
 // The client gets the API key from the environment variable `GEMINI_API_KEY`.
 const ai = new GoogleGenAI({
@@ -107,34 +107,91 @@ const interviewReportSchema = z.object({
 });
 
 async function generateInterviewReport({ resume, selfDescription, jobDescription }) {
-  const prompt = `
-Generate an interview report with the following JSON structure:
+    const prompt = `
+Generate an interview report. Your final reply must be valid JSON containing only the following keys:
 
-${JSON.stringify(zodToJsonSchema(interviewReportSchema), null, 2)}
+  {
+    "matchScore": <number>,
+    "technicalQuestions": <array>,
+    "behavioralQuestions": <array>,
+    "skillGaps": <array>,
+    "preparationPlan": <array>
+  }
+
+Each array should contain objects as described below. If you cannot provide any items, return an empty array.
+
+Example output format (exact JSON object only):
+{
+  "matchScore": 85,
+  "technicalQuestions": [
+    {
+      "question": "Explain event loop in Node.js.",
+      "intention": "Check understanding of async execution.",
+      "answer": "The event loop handles callbacks and promises..."
+    }
+  ],
+  "behavioralQuestions": [
+    {
+      "question": "Tell me about a time you faced a bug.",
+      "intention": "Assess problem-solving and ownership.",
+      "answer": "I once debugged a race condition by..."
+    }
+  ],
+  "skillGaps": [
+    { "skill": "Docker", "severity": "medium" }
+  ],
+  "preparationPlan": [
+    { "day": 1, "focus": "Data structures", "task": "Practice arrays and linked lists." }
+  ]
+}
 
 Candidate details:
 Resume: ${resume}
 Self description: ${selfDescription}
 Job description: ${jobDescription}
 
-Return **only** valid JSON matching the schema.
+Return only the JSON object described above. Do NOT include any additional text.
 `;
 
-  // fall back to simple generation and validate client-side
-  const response = await ai.models.generateContent({
-    model: "gemini-3-flash-preview",
-    contents: prompt,
-  });
+    // fall back to simple generation and validate client-side
+    const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: prompt,
+    });
 
-  const text = response.text;
-  let json;
-  try {
-    json = JSON.parse(text);
-  } catch (err) {
-    throw new Error("AI response was not valid JSON: " + text);
-  }
+    const text = response.text;
 
-  return interviewReportSchema.parse(json);
+    // Some responses include extra explanation text. Try to extract the first JSON object.
+    const jsonTextMatch = text.match(/\{[\s\S]*\}/);
+    const jsonText = jsonTextMatch ? jsonTextMatch[0] : text;
+
+    let json;
+    try {
+        json = JSON.parse(jsonText);
+    } catch (err) {
+        console.warn("AI returned invalid JSON, returning empty report:", text);
+        return {
+            matchScore: 0,
+            technicalQuestions: [],
+            behavioralQuestions: [],
+            skillGaps: [],
+            preparationPlan: [],
+        };
+    }
+
+    try {
+        return interviewReportSchema.parse(json);
+    } catch (zErr) {
+        console.warn("validation failed, defaulting; zod error:", zErr);
+        console.debug("received JSON was:", json);
+        return {
+            matchScore: 0,
+            technicalQuestions: [],
+            behavioralQuestions: [],
+            skillGaps: [],
+            preparationPlan: [],
+        };
+    }
 }
 
 module.exports = generateInterviewReport;
