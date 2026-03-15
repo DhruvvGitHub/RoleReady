@@ -1,6 +1,7 @@
 const pdfParse = require("pdf-parse")
 const generateInterviewReport = require("../services/ai.service")
 const interviewReportModel = require("../models/interviewReport.model")
+const { intersection } = require("zod")
 
 async function generateInterviewReportController(req, res) {
   try {
@@ -33,4 +34,33 @@ async function generateInterviewReportController(req, res) {
   }
 }
 
-module.exports = {generateInterviewReportController}
+async function generateInterviewReportByID(req, res) {
+    const {interviewId} = req.params;
+
+    const interviewReport = await interviewReportModel.findOne({_id: interviewId, user:req.user.id})
+
+    if(!interviewReport) {
+        return res.status(404).json({
+            success: false,
+            message: "Interview report not found"
+        })
+    }
+
+    return res.status(200).json({
+            success: true,
+            message: "Interview report fetched successfully"
+        })
+}
+
+
+async function getAllInterviewReports(req, res) {
+
+    const interviewReports = await interviewReportModel.findOne({user: req.user.id}).sort({createdAt: -1}).select("-resume -selfDescription -jobDescription -technicalQuestions -behavioralQuestions -skillGaps -preparationPlan")
+
+    return res.status(200).json({
+            success: true,
+            message: "Interview reports fetched successfully"
+        })
+}
+
+module.exports = {generateInterviewReportController, generateInterviewReportByID, getAllInterviewReports}

@@ -104,6 +104,7 @@ const interviewReportSchema = z.object({
         .describe(
             "List of skill gaps in candidate's profile along with its severity",
         ),
+        title: z.string().describe("The title of the job for which the interview report is being generated")
 });
 
 async function generateInterviewReport({ resume, selfDescription, jobDescription }) {
