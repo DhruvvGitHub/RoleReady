@@ -98,13 +98,28 @@ const interviewReportSchema = z.object({
                     .string()
                     .describe(
                         "The list of tasks to be done on this day to follow the preparation plan",
-                    ),
+                    )
+                    .optional(),
+                tasks: z
+                    .array(
+                        z
+                            .string()
+                            .describe(
+                                "Individual tasks to be done on this day in the preparation plan",
+                            ),
+                    )
+                    .optional(),
             }),
         )
         .describe(
             "List of skill gaps in candidate's profile along with its severity",
         ),
-        title: z.string().describe("The title of the job for which the interview report is being generated")
+    // Optional because the prompt doesn't require it, and missing it
+    // would otherwise cause validation to fail and return an empty report.
+    title: z
+        .string()
+        .describe("The title of the job for which the interview report is being generated")
+        .optional(),
 });
 
 async function generateInterviewReport({ resume, selfDescription, jobDescription }) {

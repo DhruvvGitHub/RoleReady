@@ -1,6 +1,32 @@
-import React from "react";
+import React, { useRef, useState } from "react";
+import { useInterview } from "../hooks/useInterview";
+import { useNavigate } from "react-router";
+
 
 const Home = () => {
+
+  const navigate = useNavigate()
+
+  const {loading, generateReport} = useInterview()
+
+  const [jobDescription, setjobDescription] = useState("")
+  const [selfDescription, setSelfDescription] = useState("")
+  const resumeInputRef = useRef()
+
+  const handleGenerateReport = async () => {
+    const resumeFile = resumeInputRef.current.files[0]
+    const data = await generateReport({selfDescription, jobDescription, resumeFile})
+    navigate(`interview/${data._id}`)
+  }
+
+  if(loading) {
+    return (
+      <main className="">
+        <h1>Loading your interview report...</h1>
+      </main>
+    )
+  }
+  
   return (
     <main className="home min-h-screen w-full bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 flex items-center justify-center px-4 py-10">
       <div className="main-container w-full max-w-4xl">
@@ -34,6 +60,7 @@ const Home = () => {
                 </span>
               </div>
               <textarea
+              onChange={(e)=> setjobDescription(e.target.value)}
                 name="jobDescription"
                 id="jobDescription"
                 placeholder="Paste the full job description, including responsibilities and requirements..."
@@ -62,6 +89,7 @@ const Home = () => {
                 <label className="mt-2 inline-flex cursor-pointer items-center justify-center rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 shadow-md transition hover:bg-emerald-400 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/70 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 sm:mt-0">
                   <span>Choose PDF</span>
                   <input
+                  ref={resumeInputRef}
                     id="resume"
                     type="file"
                     accept=".pdf"
@@ -85,6 +113,7 @@ const Home = () => {
                 </span>
               </div>
               <textarea
+              onChange={(e)=> setSelfDescription(e.target.value)}
                 name="selfDescription"
                 id="selfDescription"
                 placeholder="Briefly describe your background, strengths, and what you’re targeting in your next role..."
@@ -106,6 +135,7 @@ const Home = () => {
                 </p>
               </div>
               <button
+              onClick={handleGenerateReport }
                 type="submit"
                 className="cursor-pointer inline-flex items-center justify-center rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-emerald-500/30 transition hover:-translate-y-0.5 hover:bg-emerald-400 hover:shadow-emerald-400/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/80 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
               >

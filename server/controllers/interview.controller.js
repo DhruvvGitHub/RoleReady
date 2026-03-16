@@ -15,12 +15,33 @@ async function generateInterviewReportController(req, res) {
       jobDescription,
     })
 
+    const normalizedPreparationPlan = Array.isArray(
+      interviewReportByAI.preparationPlan,
+    )
+      ? interviewReportByAI.preparationPlan.map((item) => {
+          const baseDay = item?.day
+          const baseFocus = item?.focus
+          const tasksArray = Array.isArray(item?.tasks)
+            ? item.tasks
+            : item?.task
+            ? [item.task]
+            : []
+
+          return {
+            day: baseDay,
+            focus: baseFocus,
+            tasks: tasksArray,
+          }
+        })
+      : []
+
     const interviewReport = await interviewReportModel.create({
       user: req.user?.id,
       resume: resumeContent.text,
       selfDescription,
       jobDescription,
       ...interviewReportByAI,
+      preparationPlan: normalizedPreparationPlan,
     })
 
     res.status(201).json({
