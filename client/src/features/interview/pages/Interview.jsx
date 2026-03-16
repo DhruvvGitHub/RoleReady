@@ -1,10 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useInterview } from "../hooks/useInterview";
+import { useNavigate, useParams } from "react-router";
 
 const Interview = () => {
+
+
   const [activeSection, setActiveSection] = useState("technical");
 
-  const { report, loading } = useInterview();
+  const { report, loading, getReportById } = useInterview();
+  const navigate = useNavigate()
+  const {interviewId} = useParams()
+
+  useEffect(() => {
+    if(interviewId) {
+        getReportById(interviewId)
+    }
+  }, [interviewId])
 
   const technicalQuestions = Array.isArray(report?.technicalQuestions)
     ? report.technicalQuestions
@@ -352,7 +363,7 @@ const Interview = () => {
                 }`}
               >
                 <span>Road Map</span>
-                <span className="text-[10px] text-slate-400">7-day</span>
+                <span className="text-[10px] text-slate-400">Day wise</span>
               </button>
             </nav>
           </div>

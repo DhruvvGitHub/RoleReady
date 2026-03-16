@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useInterview } from "../hooks/useInterview";
 import { useNavigate } from "react-router";
 
@@ -7,11 +7,15 @@ const Home = () => {
 
   const navigate = useNavigate()
 
-  const {loading, generateReport} = useInterview()
+  const {loading, generateReport, reports, getReports} = useInterview()
 
   const [jobDescription, setjobDescription] = useState("")
   const [selfDescription, setSelfDescription] = useState("")
   const resumeInputRef = useRef()
+
+  useEffect(() => {
+    getReports()
+  }, [])
 
   const handleGenerateReport = async () => {
     const resumeFile = resumeInputRef.current.files[0]
@@ -144,6 +148,77 @@ const Home = () => {
             </div>
           </div>
         </section>
+
+        {reports && reports.length > 0 && (
+          <section className="mt-8 space-y-4">
+            <header className="flex items-center justify-between gap-3">
+              <div>
+                <h2 className="text-lg font-semibold text-slate-50 sm:text-xl">
+                  Your recent interview reports
+                </h2>
+                <p className="text-xs text-slate-400 sm:text-sm">
+                  Revisit past reports to track your progress and prep faster.
+                </p>
+              </div>
+            </header>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              {reports.map((report) => {
+                const createdAt = report?.createdAt
+                  ? new Date(report.createdAt)
+                  : null;
+                const matchScore =
+                  typeof report?.matchScore === "number"
+                    ? report.matchScore
+                    : 0;
+
+                const titleFromJob =
+                  report?.title ||
+                  (report?.jobDescription
+                    ? report.jobDescription.split("\n")[0]
+                    : "Interview Report");
+
+                const scoreColor =
+                  matchScore >= 80
+                    ? "text-emerald-300"
+                    : matchScore >= 60
+                    ? "text-amber-300"
+                    : "text-rose-300";
+
+                return (
+                  <button
+                    key={report._id}
+                    type="button"
+                    onClick={() => navigate(`/interview/${report._id}`)}
+                    className="group flex flex-col items-start rounded-2xl border border-slate-700 bg-slate-900/70 px-4 py-3 text-left shadow-sm transition hover:border-emerald-500/60 hover:shadow-emerald-500/20"
+                  >
+                    <div className="flex w-full items-center justify-between gap-3">
+                      <h3 className="line-clamp-1 text-sm font-semibold text-slate-50 sm:text-base">
+                        {titleFromJob}
+                      </h3>
+                      <span className="rounded-full bg-slate-800 px-2 py-1 text-[10px] font-medium uppercase tracking-[0.16em] text-slate-300">
+                        Report
+                      </span>
+                    </div>
+                    <p className="mt-1 text-xs text-slate-400">
+                      Generated on{" "}
+                      {createdAt
+                        ? createdAt.toLocaleDateString()
+                        : "Unknown date"}
+                    </p>
+                    <p className={`mt-3 text-sm font-semibold ${scoreColor}`}>
+                      Match Score:{" "}
+                      <span className="text-base">
+                        {matchScore}
+                        <span className="text-xs text-slate-300">%</span>
+                      </span>
+                    </p>
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+        )}
       </div>
     </main>
   );

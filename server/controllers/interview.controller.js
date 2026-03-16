@@ -6,6 +6,13 @@ const { intersection } = require("zod")
 async function generateInterviewReportController(req, res) {
   try {
     const resumeBuffer = req.file?.buffer
+
+    if (!resumeBuffer) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Resume file is required" })
+    }
+
     const resumeContent = await (new pdfParse.PDFParse(Uint8Array.from(resumeBuffer))).getText()
     const { selfDescription, jobDescription } = req.body
 
@@ -68,20 +75,25 @@ async function generateInterviewReportByID(req, res) {
     }
 
     return res.status(200).json({
-            success: true,
-            message: "Interview report fetched successfully"
-        })
+      success: true,
+      message: "Interview report fetched successfully",
+      interviewReport,
+    })
 }
 
 
 async function getAllInterviewReports(req, res) {
 
-    const interviewReports = await interviewReportModel.findOne({user: req.user.id}).sort({createdAt: -1}).select("-resume -selfDescription -jobDescription -technicalQuestions -behavioralQuestions -skillGaps -preparationPlan")
+    const interviewReports = await interviewReportModel
+      .find({ user: req.user.id })
+      .sort({ createdAt: -1 })
+      .select("-resume -selfDescription -jobDescription")
 
     return res.status(200).json({
-            success: true,
-            message: "Interview reports fetched successfully"
-        })
+      success: true,
+      message: "Interview reports fetched successfully",
+      interviewReports,
+    })
 }
 
 module.exports = {generateInterviewReportController, generateInterviewReportByID, getAllInterviewReports}

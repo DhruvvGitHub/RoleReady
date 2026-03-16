@@ -7,13 +7,7 @@ const ai = new GoogleGenAI({
     apiKey: process.env.GOOGLE_GENAI_API_KEY,
 });
 
-// async function invokeGeminiAI() {
-//     const response = await ai.models.generateContent({
-//         model: "gemini-3-flash-preview",
-//         contents: "Explain how AI works in a few words",
-//     });
-//     console.log(response.text);
-// }
+
 
 const interviewReportSchema = z.object({
     matchScore: z
