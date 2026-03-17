@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useInterview } from "../hooks/useInterview";
 import { useNavigate, useParams } from "react-router";
 import { IoSparklesSharp } from "react-icons/io5";
+import Loading from "../../Loading";
 
 
 const Interview = () => {
@@ -85,14 +86,7 @@ const Interview = () => {
     if (activeSection === "technical") {
       if (loading) {
         return (
-          <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-slate-50 sm:text-xl">
-              Technical Questions
-            </h2>
-            <p className="text-sm text-slate-300">
-              Generating your interview report…
-            </p>
-          </div>
+          <Loading />
         );
       }
       
@@ -169,14 +163,7 @@ const Interview = () => {
     if (activeSection === "behavioral") {
       if (loading) {
         return (
-          <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-slate-50 sm:text-xl">
-              Behavioral Questions
-            </h2>
-            <p className="text-sm text-slate-300">
-              Generating your interview report…
-            </p>
-          </div>
+          <Loading />
         );
       }
 
@@ -248,14 +235,7 @@ const Interview = () => {
 
     if (loading) {
       return (
-        <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-slate-50 sm:text-xl">
-            Preparation Road Map
-          </h2>
-          <p className="text-sm text-slate-300">
-            Generating your interview report…
-          </p>
-        </div>
+        <Loading />
       );
     }
 

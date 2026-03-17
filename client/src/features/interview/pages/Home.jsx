@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useInterview } from "../hooks/useInterview";
 import { useNavigate } from "react-router";
+import Loading from "../../Loading";
 
 
 const Home = () => {
@@ -25,9 +26,7 @@ const Home = () => {
 
   if(loading) {
     return (
-      <main className="">
-        <h1>Loading your interview report...</h1>
-      </main>
+      <Loading />
     )
   }
   
@@ -129,7 +128,7 @@ const Home = () => {
             </div>
 
             {/* CTA */}
-            <div className="mt-4 flex flex-col items-stretch justify-between gap-4 border-t border-slate-800 pt-4 sm:flex-row sm:items-center">
+            <div className="mt-4 items-stretch justify-between gap-4 border-t border-slate-800 pt-4 sm:flex-row sm:items-center">
               <div className="space-y-1 text-xs text-slate-400 sm:text-sm">
                 <p>
                   By continuing, you confirm that you have permission to use this job description and resume data.
@@ -140,8 +139,8 @@ const Home = () => {
               </div>
               <button
               onClick={handleGenerateReport }
-                type="submit"
-                className="cursor-pointer inline-flex items-center justify-center rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-emerald-500/30 transition hover:-translate-y-0.5 hover:bg-emerald-400 hover:shadow-emerald-400/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/80 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
+                type="submit" 
+                className="mt-4 cursor-pointer inline-flex items-center justify-center rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-emerald-500/30 transition hover:-translate-y-0.5 hover:bg-emerald-400 hover:shadow-emerald-400/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/80 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
               >
                 Generate Interview Report
               </button>
