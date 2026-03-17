@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { InterviewContext } from "../interview.context";
 import {
   generateInterviewReport,
+  generateResumePdf as generateResumePdfApi,
   getAllInterviewReports,
   getInterviewReportById,
 } from "../../services/interview.api";
@@ -71,5 +72,27 @@ export const useInterview = () => {
     return response ? response.interviewReports : null;
   };
 
-  return {loading, report, reports, generateReport, getReportById, getReports}
+  const generateResumePdf = async (interviewReportId) => {
+    setLoading(true);
+    let response = null;
+    try {
+      response = await generateResumePdfApi(interviewReportId);
+      const url = window.URL.createObjectURL(
+        new Blob([response], { type: "application/pdf" }),
+      );
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `resume_${interviewReportId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return {loading, report, reports, generateReport, getReportById, getReports, generateResumePdf}
 };

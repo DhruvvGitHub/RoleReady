@@ -162,7 +162,7 @@ const Home = () => {
               </div>
             </header>
 
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-2 ">
               {reports.map((report) => {
                 const createdAt = report?.createdAt
                   ? new Date(report.createdAt)
@@ -190,9 +190,9 @@ const Home = () => {
                     key={report._id}
                     type="button"
                     onClick={() => navigate(`/interview/${report._id}`)}
-                    className="group flex flex-col items-start rounded-2xl border border-slate-700 bg-slate-900/70 px-4 py-3 text-left shadow-sm transition hover:border-emerald-500/60 hover:shadow-emerald-500/20"
+                    className="group flex flex-col items-start rounded-2xl cursor-pointer border border-slate-700 bg-slate-900/70 px-4 py-3 text-left shadow-sm transition hover:border-emerald-500/60 hover:shadow-emerald-500/20"
                   >
-                    <div className="flex w-full items-center justify-between gap-3">
+                    <div className="flex w-full items-center justify-between gap-3 ">
                       <h3 className="line-clamp-1 text-sm font-semibold text-slate-50 sm:text-base">
                         {titleFromJob}
                       </h3>

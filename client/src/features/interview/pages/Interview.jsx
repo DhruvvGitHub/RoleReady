@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useInterview } from "../hooks/useInterview";
 import { useNavigate, useParams } from "react-router";
+import { IoSparklesSharp } from "react-icons/io5";
+
 
 const Interview = () => {
 
 
   const [activeSection, setActiveSection] = useState("technical");
 
-  const { report, loading, getReportById } = useInterview();
+  const { report, loading, getReportById, generateResumePdf } = useInterview();
   const navigate = useNavigate()
   const {interviewId} = useParams()
 
@@ -321,9 +323,10 @@ const Interview = () => {
     <main className="min-h-screen w-full bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
       <div className="mx-auto flex max-w-6xl flex-col gap-6 lg:flex-row">
         {/* Left sidebar */}
-        <aside className="lg:w-60">
-          <div className="sticky top-4 rounded-2xl border border-slate-800 bg-slate-950/60 px-4 py-5 shadow-lg backdrop-blur">
-            <p className="mb-4 text-xs font-medium uppercase tracking-[0.18em] text-slate-400">
+        <aside className="lg:w-75">
+          <div className="sticky top-4 rounded-2xl border border-slate-800 bg-slate-950/60 px-4 py-5 shadow-lg backdrop-blur flex flex-col items-center gap-16">
+            <div className="upper-section">
+              <p className="mb-4 text-xs font-medium uppercase tracking-[0.18em] text-slate-400">
               Sections
             </p>
             <nav className="space-y-1">
@@ -366,6 +369,11 @@ const Interview = () => {
                 <span className="text-[10px] text-slate-400">Day wise</span>
               </button>
             </nav>
+            </div>
+            <div className="download-btn">
+              <button onClick={()=> {generateResumePdf(interviewId)}} className=" inline-flex cursor-pointer items-center justify-center rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 shadow-md transition hover:bg-emerald-400 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/70 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 sm:mt-0 gap-2">RoleReady Customized Resume<IoSparklesSharp /></button>
+              <p className="text-xs text-slate-400 sm:text-sm mt-2">Download this resume which is customized for this particular job role which increases your chances of getting a call </p>
+            </div>
           </div>
         </aside>
 
