@@ -11,7 +11,7 @@ if (typeof connectToDB === "function") {
     connectToDB();
 }
 
-generateInterviewReport({resume, selfDescription, jobDescription})
+// generateInterviewReport({resume, selfDescription, jobDescription})
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
