@@ -2,7 +2,7 @@ import { api } from "./api";
 
 export async function register({username, email, password}) {
     try {
-        const response = await api.post("/auth/register", {
+        const response = await api.post("/api/auth/register", {
         username,
         email,
         password
@@ -16,7 +16,7 @@ export async function register({username, email, password}) {
 
 export async function login({ email, password}) {
     try {
-        const response = await api.post("/auth/login", {
+        const response = await api.post("/api/auth/login", {
         email,
         password
     })
@@ -29,7 +29,7 @@ export async function login({ email, password}) {
 
 export async function logout() {
     try {
-        const response = await api.get("/auth/logout")
+        const response = await api.get("/api/auth/logout")
         return response.data
     } catch (error) {
         // most common case is 401 when no cookie/token is present;
@@ -41,7 +41,7 @@ export async function logout() {
 
 export async function getMe() {
     try {
-        const response = await api.get("/auth/get-me")
+        const response = await api.get("/api/auth/get-me")
 
     return response.data
     } catch (error) {
