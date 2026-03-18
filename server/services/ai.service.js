@@ -1,5 +1,11 @@
 const { GoogleGenAI } = require("@google/genai");
-const puppeteer = require("puppeteer")
+let puppeteer;
+try {
+  puppeteer = require("puppeteer");
+} catch (error) {
+  console.warn("Puppeteer not available, PDF generation will be disabled");
+  puppeteer = null;
+}
 const { z } = require("zod");
 const { zodToJsonSchema } = require("zod-to-json-schema");
 
@@ -203,6 +209,11 @@ Return only the JSON object described above. Do NOT include any additional text.
 
 async function generateResumePdf({ resume, selfDescription, jobDescription }) {
     console.log("Gen resume called");
+    
+    if (!puppeteer) {
+      throw new Error("PDF generation is not available - Puppeteer not installed");
+    }
+    
   const resumePdfSchema = z.object({
     html: z
       .string()
@@ -238,6 +249,11 @@ The total content should be ATS friendly, meaning it should be easily parsable b
 
 async function generatePdfFromHtml(htmlContent) {
     console.log("Generating PDF from HTML content");
+    
+    if (!puppeteer) {
+      throw new Error("PDF generation is not available - Puppeteer not installed");
+    }
+    
   let browser;
   try {
     browser = await puppeteer.launch({
