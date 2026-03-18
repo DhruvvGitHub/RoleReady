@@ -7,9 +7,15 @@ const {resume, selfDescription, jobDescription} = require("./services/temp")
 const generateInterviewReport = require("./services/ai.service")
 
 // connect to MongoDB (if you have a function for it)
-if (typeof connectToDB === "function") {
-    connectToDB();
-}
+connectToDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("DB connection failed", err);
+  });
 
 // generateInterviewReport({resume, selfDescription, jobDescription})
 
