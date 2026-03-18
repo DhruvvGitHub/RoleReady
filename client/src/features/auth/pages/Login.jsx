@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from "react-router"
 import { Link } from 'react-router'
 import { useAuth } from "../hooks/useAuth"     // <– import the hook
+import Loading from '../../Loading'
 
 const Login = () => {
   const { handleLogin, loading } = useAuth()   // <– call it here
@@ -20,7 +21,7 @@ const Login = () => {
 
     if(loading) {
         return (
-            <main>Loading...</main>
+            <Loading />
         )
     }
 

@@ -1,6 +1,7 @@
 import React from 'react'
 import { useAuth } from '../hooks/useAuth'
 import { Navigate } from 'react-router'
+import Loading from '../../Loading'
 
 const Protected = ({children}) => {
 
@@ -8,7 +9,7 @@ const Protected = ({children}) => {
 
     if(loading) {
         return (
-            <main><h1>Loading...</h1></main>
+            <Loading />
         )
     }
 
