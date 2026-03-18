@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useInterview } from "../hooks/useInterview";
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 import { IoSparklesSharp } from "react-icons/io5";
 import Loading from "../../Loading";
 
@@ -11,7 +11,6 @@ const Interview = () => {
   const [activeSection, setActiveSection] = useState("technical");
 
   const { report, loading, getReportById, generateResumePdf } = useInterview();
-  const navigate = useNavigate()
   const {interviewId} = useParams()
 
   useEffect(() => {
