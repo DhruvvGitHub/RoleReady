@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser())
 app.use(cors({
-    origin: ["http://localhost:5173", "https://role-ready.vercel.app"],
+    origin: ["http://localhost:5173", "https://role-ready.vercel.app", "https://role-ready-f1mwdm0pf-dhruvvprojects.vercel.app"],
     credentials: true
 }))
 
