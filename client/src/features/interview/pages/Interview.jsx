@@ -258,7 +258,7 @@ const Interview = () => {
         </header>
 
         {normalizedPlan.length ? (
-          <ol className="relative space-y-4 border-l border-slate-700 pl-5">
+          <ol className="relative space-y-4 pl-5">
             {normalizedPlan.map((item, index) => (
               <li key={`${item.day}-${item.title}-${index}`} className="relative pl-2">
                 <div className="absolute -left-2 top-2 h-3 w-3 -translate-x-1/2 rounded-full border-2 border-emerald-400 bg-slate-900" />
@@ -300,10 +300,10 @@ const Interview = () => {
 
   return (
     <main className="min-h-screen w-full bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 lg:flex-row">
+      <div className="mx-auto flex max-w-7xl flex-col gap-6 lg:flex-row">
         {/* Left sidebar */}
         <aside className="lg:w-75">
-          <div className="sticky top-4 rounded-2xl border border-slate-800 bg-slate-950/60 px-4 py-5 shadow-lg backdrop-blur flex flex-col items-center gap-16">
+          <div className="sticky top-4 rounded-2xl border border-slate-800 px-8 py-5 shadow-lg backdrop-blur flex flex-col gap-16 ">
             <div className="upper-section">
               <p className="mb-4 text-xs font-medium uppercase tracking-[0.18em] text-slate-400">
               Sections
