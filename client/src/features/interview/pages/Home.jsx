@@ -30,7 +30,14 @@ const Home = () => {
   const handleGenerateReport = async () => {
     const resumeFile = resumeInputRef.current.files[0]
     const data = await generateReport({selfDescription, jobDescription, resumeFile})
-    navigate(`interview/${data._id}`)
+    
+    if (data && data._id) {
+      navigate(`interview/${data._id}`)
+    } else {
+      // Handle error case - maybe show a toast or alert
+      console.error('Failed to generate report: No valid data returned')
+      // You could add a toast notification here
+    }
   }
 
   if(loading) {

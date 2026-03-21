@@ -185,15 +185,15 @@ Return only the JSON object described above. Do NOT include any additional text.
 
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: prompt,
-    });
+  model: "gemini-3.1-flash-lite-preview",
+  contents: prompt,
+});
 
-    if (!response || !response.text) {
-      throw new Error("AI response missing text");
-    }
+if (!response || !response.text) {
+  throw new Error("AI response missing text");
+}
 
-    const text = response.text;
+const text = response.text;
     const jsonTextMatch = text.match(/\{[\s\S]*\}/);
     const jsonText = jsonTextMatch ? jsonTextMatch[0] : text;
 
@@ -268,15 +268,11 @@ You can highlight the content using some colors or different font style but the 
 The total content should be ATS friendly, meaning it should be easily parsable by Applicant Tracking Systems, so avoid complex layouts or graphics. The resume should not be very long, it should ideally fit in 1-2 pages when converted to PDF. Focus on the most relevant information that showcases the candidate's suitability for the job.`;
 
   const response = await ai.models.generateContent({
-    model: "gemini-3-flash-preview",
-    contents: prompt,
-    config: {
-      responseMimeType: "application/json",
-      responseSchema: zodToJsonSchema(resumePdfSchema),
-    },
-  });
+  model: "gemini-3.1-flash-lite-preview",
+  contents: prompt,
+});
 
-  const jsonContent = JSON.parse(response.text);
+const jsonContent = JSON.parse(response.text);
 
   const pdfBuffer = await generatePdfFromHtml(jsonContent.html);
     return pdfBuffer;
