@@ -10,7 +10,7 @@ const Interview = () => {
 
   const [activeSection, setActiveSection] = useState("technical");
 
-  const { report, loading, getReportById, generateResumePdf } = useInterview();
+  const { report, loading, getReportById, generateResumeHtml } = useInterview();
   const {interviewId} = useParams()
 
   useEffect(() => {
@@ -350,7 +350,7 @@ const Interview = () => {
             </nav>
             </div>
             <div className="download-btn">
-              <button onClick={()=> {generateResumePdf(interviewId)}} className=" inline-flex cursor-pointer items-center justify-center rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 shadow-md transition hover:bg-emerald-400 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/70 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 sm:mt-0 gap-2">RoleReady Customized Resume<IoSparklesSharp /></button>
+              <button onClick={()=> {generateResumeHtml(interviewId)}} className=" inline-flex cursor-pointer items-center justify-center rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 shadow-md transition hover:bg-emerald-400 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/70 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 sm:mt-0 gap-2">RoleReady Customized Resume<IoSparklesSharp /></button>
               <p className="text-xs text-slate-400 sm:text-sm mt-2">Download this resume which is customized for this particular job role which increases your chances of getting a call </p>
             </div>
           </div>
