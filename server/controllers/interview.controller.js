@@ -16,11 +16,19 @@ async function generateInterviewReportController(req, res) {
         .json({ success: false, message: "Resume file is required" })
     }
 
-    const resumeContent = await (new pdfParse.PDFParse(Uint8Array.from(resumeBuffer))).getText()
+    const parsedResume = await pdfParse(resumeBuffer)
+    const resumeText = parsedResume?.text?.trim() || ""
+
+    if (!resumeText) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Unable to extract text from resume PDF" })
+    }
+
     const { selfDescription, jobDescription } = req.body
 
     const interviewReportByAI = await generateInterviewReport({
-      resume: resumeContent.text,
+      resume: resumeText,
       selfDescription,
       jobDescription,
     })
@@ -61,7 +69,11 @@ async function generateInterviewReportController(req, res) {
     })
   } catch (err) {
     console.error("generateInterviewReportController error", err)
-    res.status(500).json({ success: false, message: "Failed to generate interview report" })
+    res.status(500).json({
+      success: false,
+      message: "Failed to generate interview report",
+      error: err.message || "unknown",
+    })
   }
 }
 

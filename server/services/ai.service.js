@@ -120,6 +120,23 @@ async function generateInterviewReport({
   selfDescription,
   jobDescription,
 }) {
+  if (!resume || !jobDescription) {
+    console.warn("generateInterviewReport called with missing required fields", {
+      resume: !!resume,
+      selfDescription: !!selfDescription,
+      jobDescription: !!jobDescription,
+    });
+    return {
+      matchScore: 0,
+      technicalQuestions: [],
+      behavioralQuestions: [],
+      skillGaps: [],
+      preparationPlan: [],
+      title: "Fallback Report",
+      warning: "Missing required fields",
+    };
+  }
+
   const prompt = `
 Generate an interview report. Your final reply must be valid JSON containing only the following keys:
 
@@ -166,43 +183,61 @@ Job description: ${jobDescription}
 Return only the JSON object described above. Do NOT include any additional text.
 `;
 
-  // fall back to simple generation and validate client-side
-  const response = await ai.models.generateContent({
-    model: "gemini-3-flash-preview",
-    contents: prompt,
-  });
-
-  const text = response.text;
-
-  // Some responses include extra explanation text. Try to extract the first JSON object.
-  const jsonTextMatch = text.match(/\{[\s\S]*\}/);
-  const jsonText = jsonTextMatch ? jsonTextMatch[0] : text;
-
-  let json;
   try {
-    json = JSON.parse(jsonText);
+    const response = await ai.models.generateContent({
+      model: "gemini-3-flash-preview",
+      contents: prompt,
+    });
+
+    if (!response || !response.text) {
+      throw new Error("AI response missing text");
+    }
+
+    const text = response.text;
+    const jsonTextMatch = text.match(/\{[\s\S]*\}/);
+    const jsonText = jsonTextMatch ? jsonTextMatch[0] : text;
+
+    let json;
+    try {
+      json = JSON.parse(jsonText);
+    } catch (parseErr) {
+      console.warn("AI returned invalid JSON, returning empty report:", text);
+      return {
+        matchScore: 0,
+        technicalQuestions: [],
+        behavioralQuestions: [],
+        skillGaps: [],
+        preparationPlan: [],
+        title: "Fallback Report",
+        warning: "AI output JSON parse failed",
+      };
+    }
+
+    try {
+      return interviewReportSchema.parse(json);
+    } catch (zErr) {
+      console.warn("validation failed, defaulting; zod error:", zErr);
+      console.debug("received JSON was:", json);
+      return {
+        matchScore: 0,
+        technicalQuestions: [],
+        behavioralQuestions: [],
+        skillGaps: [],
+        preparationPlan: [],
+        title: "Fallback Report",
+        warning: "Zod validation failed",
+      };
+    }
   } catch (err) {
-    console.warn("AI returned invalid JSON, returning empty report:", text);
+    console.error("generateInterviewReport failed:", err);
     return {
       matchScore: 0,
       technicalQuestions: [],
       behavioralQuestions: [],
       skillGaps: [],
       preparationPlan: [],
-    };
-  }
-
-  try {
-    return interviewReportSchema.parse(json);
-  } catch (zErr) {
-    console.warn("validation failed, defaulting; zod error:", zErr);
-    console.debug("received JSON was:", json);
-    return {
-      matchScore: 0,
-      technicalQuestions: [],
-      behavioralQuestions: [],
-      skillGaps: [],
-      preparationPlan: [],
+      title: "Fallback Report",
+      warning: "AI service error: " + (err.message || "unknown"),
     };
   }
 }
