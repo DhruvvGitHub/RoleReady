@@ -1,29 +1,35 @@
 import {createBrowserRouter} from "react-router"
-import Login from "./features/auth/pages/Login"
-import Register from "./features/auth/pages/Register"
+import {lazy, Suspense} from "react"
 import Protected from "./features/auth/components/Protected"
-import Home from "./features/interview/pages/Home"
-import Interview from "./features/interview/pages/Interview"
+
+const Login = lazy(() => import("./features/auth/pages/Login"))
+const Register = lazy(() => import("./features/auth/pages/Register"))
+const Home = lazy(() => import("./features/interview/pages/Home"))
+const Interview = lazy(() => import("./features/interview/pages/Interview"))
 
 export const router = createBrowserRouter([
     {
         path: "/",
         element: <Protected>
-            <Home />
+            <Suspense fallback={<div>Loading...</div>}>
+                <Home />
+            </Suspense>
         </Protected>
     },
     {
         path: "/login",
-        element: <Login />
+        element: <Suspense fallback={<div>Loading...</div>}><Login /></Suspense>
     },
     {
         path: "/register",
-        element: <Register />
+        element: <Suspense fallback={<div>Loading...</div>}><Register /></Suspense>
     },
     {
         path: "/interview/:interviewId",
         element: <Protected>
-            <Interview />
+            <Suspense fallback={<div>Loading...</div>}>
+                <Interview />
+            </Suspense>
         </Protected>
     }
 ])
