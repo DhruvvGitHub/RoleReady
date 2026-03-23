@@ -1,6 +1,7 @@
 import {createBrowserRouter} from "react-router"
 import {lazy, Suspense} from "react"
 import Protected from "./features/auth/components/Protected"
+import Loading from "./features/Loading"
 
 const Login = lazy(() => import("./features/auth/pages/Login"))
 const Register = lazy(() => import("./features/auth/pages/Register"))
@@ -11,23 +12,23 @@ export const router = createBrowserRouter([
     {
         path: "/",
         element: <Protected>
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<Loading />}>
                 <Home />
             </Suspense>
         </Protected>
     },
     {
         path: "/login",
-        element: <Suspense fallback={<div>Loading...</div>}><Login /></Suspense>
+        element: <Suspense fallback={<Loading />}><Login /></Suspense>
     },
     {
         path: "/register",
-        element: <Suspense fallback={<div>Loading...</div>}><Register /></Suspense>
+        element: <Suspense fallback={<Loading />}><Register /></Suspense>
     },
     {
         path: "/interview/:interviewId",
         element: <Protected>
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<Loading />}>
                 <Interview />
             </Suspense>
         </Protected>
