@@ -12,9 +12,11 @@ export const useAuth = () => {
             const data = await login({email, password})
     
             setUser(data.user)
+            localStorage.setItem('isAuthenticated', 'true')
             
-        } catch (error) {
-            console.log(error);
+        } catch (err) {
+            console.log(err);
+            throw err;
         }
         finally {
             setLoading(false)
@@ -26,9 +28,10 @@ export const useAuth = () => {
         try {
             const data = await register({username, email, password})
             setUser(data.user)
+            localStorage.setItem('isAuthenticated', 'true')
         } catch (err) {
             console.error("registration failed", err)
-            // optionally handle error state here
+            throw err;
         } finally {
             setLoading(false)
         }
@@ -39,9 +42,10 @@ export const useAuth = () => {
         try {
             await logout()
             setUser(null)
+            localStorage.removeItem('isAuthenticated')
         } catch (err) {
             console.error("logout failed", err)
-            // optionally handle error state here
+            throw err;
         } finally {
             setLoading(false)
         }

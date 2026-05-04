@@ -9,13 +9,21 @@ export const AuthProvider = ({children}) => {
 
     useEffect(() => {
         const getAndSetUser = async () => {
+            if (localStorage.getItem('isAuthenticated') !== 'true') {
+                setLoading(false)
+                return
+            }
+
             try {
                 const data = await getMe()
                 if (data && data.user) {
                     setUser(data.user)
+                } else {
+                    localStorage.removeItem('isAuthenticated')
                 }
             } catch (err) {
                 console.log("getMe failed", err.message || err)
+                localStorage.removeItem('isAuthenticated')
             } finally {
                 setLoading(false)
             }
